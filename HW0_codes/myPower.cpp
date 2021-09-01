@@ -1,3 +1,11 @@
+/***********************************************************
+Main progam template for practice exercise HomeworkZero
+
+Fast log(N) for positive powers of double x?
+
+C and C++ is not smart enough to do this!
+************************************************************/
+
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -5,16 +13,31 @@
 #include <math.h>
 using namespace std;
 
-/***********************************************************
-Main progam template for practice exercise HomeworkZero
-************************************************************/
-
 double slowPower(double x, long int N);
 double fastPower(double x, long int N);
 double  cPower(double x, long int N);
 
-int main(void) 
+int main(int argc, char **argv) 
 {
+  //default values
+  unsigned long int N = 3141592653; // Max 4,294,967,295
+  double x =  1.00000001; ;  // Max 1.79769e+308
+  
+  if(argc==1){
+    printf("Provide command line args for  x and  N to compute pow( %.12f,%lu)! \n",x,N);
+    printf("Without them the default is  x = %.12f and N = %lu \n",x,N);
+  }
+  else if(argc==3)
+    {
+      x = atof(argv[1]);
+      N =  std::stoul(argv[2]);
+      printf("\n x = %.12f  and N =  %lu  \n", x, N);   
+    }
+  else
+    {printf("Error need two command line args for x and N\n");
+      return 0;
+    }
+  
   /* Timeing and IO setup */
   chrono::time_point<chrono::steady_clock> start, stop; 
   chrono::duration<double> difference_in_time;
@@ -23,10 +46,6 @@ int main(void)
   double difference_in_sec_c; // Holds the final run time
   
 
-  unsigned long int N = 3141592653; // Max 4,294,967,295
-  double x = 1.00000001;  // Max 1.79769e+308
-  // Debug with small value like N = 137
- 
     
   start = chrono::steady_clock::now();
   double power_c = cPower(x,N);
@@ -80,8 +99,9 @@ double  fastPower(double x, long int N)
   double square = x;
   double pow = 1.0;
   while(N > 0)
-    { 
-      if(N%2) pow = 1.0 ;
+    {  
+      if(N%2) // {??? }    
+	// ???? ;
       //     	cout<< " N%2 = "<<  N%2 << " N/2 = "<<  N <<  endl;
       N = N/2;
     }
