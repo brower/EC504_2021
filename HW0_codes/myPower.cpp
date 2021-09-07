@@ -100,7 +100,7 @@ double  fastPower(double x, long int N)
   double pow = 1.0;
   while(N > 0)
     {  
-      if(N%2) // {??? }    
+      if(N%2)   ;  // {??? }    
 	// ???? ;
       //     	cout<< " N%2 = "<<  N%2 << " N/2 = "<<  N <<  endl;
       N = N/2;
