@@ -1,0 +1,4 @@
+plot "Complete_TAVG_summary.txt" using 1:2:3 with errorbars
+f(x) = a + b*(x-1750) *c*(x-1750)*(x-1750)
+fit [1900:2015] f(x) "Complete_TAVG_summary.txt" using 1:2:3 via a,b,c
+replot f(x)
