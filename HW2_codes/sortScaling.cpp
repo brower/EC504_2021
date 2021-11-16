@@ -6,7 +6,7 @@
 #include "sorting.h"
 using namespace std;
 
-#define Debug 0
+#define Debug 1
 
 // Debugging routine: (Good Software would put this in seperate test.h)
 void printArray(int a[], int N)
@@ -18,9 +18,8 @@ void printArray(int a[], int N)
 
 int main()
 {
-  
   // Put loop around N to make data for scaling  
-  int N = 32;
+  int N = 8;
   int a[N];
   int a_save[N];
   int a_tmp[N];
