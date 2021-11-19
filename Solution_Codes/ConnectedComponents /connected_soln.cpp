@@ -1,3 +1,4 @@
+// Copyright 2018 Richard Brower brower@bu.edu
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -29,26 +30,26 @@ typedef struct Queue
         int front;
         int rear;
         int *elements;
-}Queue;
+} Queue ;
 
 Queue * createQueue(int maxElements);
 void Enqueue(Queue *Q,int element);
 int Dequeue(Queue *Q);
-int find_connected_components_BFS(int *FirstVertex, int V, int *EdgeList,int E);
-void PrintAdjacencyListFormat(int *FirstVertex, int V, int *EdgeList,int E);
-// void BFS(Queue * Q,, int *Found, int *FirstVertex, int V, int *EdgeList,int E);
+int find_connected_components(int *FirstVertex, int V, int *EdgeList,int E);
+ void BFS(Queue *Q, int *Found, int *FirstVertex, int V, int *EdgeList,int E);
+void PrintAdjacencyListFormat( int *FirstVertex, int V, int *EdgeList,int E);
 
 
 int main(int argc, char *argv[]){
 
   chrono::time_point<chrono::steady_clock> start, stop; 
   chrono::duration<double> difference_in_time;
-  double difference_in_seconds_BFS; // Holds the final run time for BFS
+  double difference_in_seconds; // Holds the final run time
   
   ifstream infile1;
   int V;
   int E;
-  int NumberCC_BFS;
+  int NumberCC;
   
   infile1.open(argv[1]);
   if(!infile1){
@@ -60,51 +61,94 @@ int main(int argc, char *argv[]){
      infile1 >> E;
     
     int *FirstVertex = new int[V+1];
-    for(int i=0; i< V+1 ; i++) 
-      infile1 >> FirstVertex[i];  //  Note: FirstVertex[V] = E  fake extra link
+    for(int i=0; i< V+1 ; i++)
+      infile1 >> FirstVertex[i];
     
+    FirstVertex[V] = E;
+    
+   
     int *EdgeList = new int[E+1];
-    for(int i=0; i< E +1 ; i++)
-      infile1 >> EdgeList[i];   // Note  EdgeList[E] = -1;  is null flag
+    for(int i=0; i< E+1 ; i++)
+      infile1 >> EdgeList[i];
+    
+    EdgeList[E] = -1;  // null flag
     
     infile1.close();
+    
 
- #if 1 // set to 1 to debug 
+#if 1 // set to 1 to debug 
      cout << endl << "A print in Adjacency  List form to help with Debugging! " << endl;
      PrintAdjacencyListFormat(FirstVertex, V, EdgeList, E);
 #endif
+     
     
-    /* Find NumberCC_BFS   */
+    /* Find NumberCC   */
     start = chrono::steady_clock::now();
-    NumberCC_BFS=find_connected_components_BFS(FirstVertex, V, EdgeList,E);
+    NumberCC=find_connected_components(FirstVertex, V, EdgeList,E);
     stop = chrono::steady_clock::now();
     difference_in_time = stop - start;
-    difference_in_seconds_BFS = double(difference_in_time.count());
-
+    difference_in_seconds = double(difference_in_time.count());
+    
     //Begin output file : DO NOT CHANGE
     ofstream outfile(strcat(argv[1],"_out"));
-    outfile << difference_in_seconds_BFS << endl;
-    outfile << NumberCC_BFS << endl;
-    //     outfile << difference_in_seconds_DFS << endl;  
-    //   outfile << NumberCC_DFS << endl;
+    outfile << difference_in_seconds << endl;
+    outfile << NumberCC << endl;
     //End output file
-     
+
     return 0;
 }
 
-int find_connected_components_BFS(int *FirstVertex, int V, int *EdgeList,int E)
+
+int find_connected_components(int *FirstVertex, int V, int *EdgeList,int E)
 {  
-    int NumberCC_BFS  = 0;
+    int NumberCC  = 0;
     int *Found = new int[V];
     fill_n(Found, V, -1);
-     Queue *Q = createQueue(V);
-
-     // Write code to interate over BFS to find all connected compoents.
-     
-    // BFS(Q,Found, FirstVertex,  V, EdgeList,int E);
     
-    return NumberCC_BFS;
+    Queue *Q = createQueue(V);
+
+    for(int StartNode=0 ; StartNode < V  ; StartNode++){
+      if(Found[StartNode] == -1)
+	{
+	//Prachi printf added line below
+	printf("%d ",StartNode);
+      Enqueue(Q,StartNode); //push into quene and set found.
+    	Found[StartNode] = 1;
+    	BFS( Q,  Found, FirstVertex, V, EdgeList, E);
+    	NumberCC++;
+	}
+    }
+	//Prachi added printf line below
+	printf("\n");
+    
+    return NumberCC;
 }
+
+void BFS(Queue *Q, int *Found, int *FirstVertex, int V, int *EdgeList,int E)
+{
+  int node;
+  static int CountDequeue = 0;
+  
+    while(Q->size > 0)
+    {
+       node = Dequeue(Q);
+       CountDequeue++;
+
+       //Put children in Q.
+       for(int nn = FirstVertex[node]; nn < FirstVertex[node +1]; nn++) 
+	{
+	  if(Found[EdgeList[nn]] == -1)
+	    {
+		//Prachi
+		printf("%d ",EdgeList[nn]);
+	      Enqueue(Q,EdgeList[nn]);
+	      Found[EdgeList[nn]] = 1;
+ 	    }
+	}
+
+    }
+}
+
 
 /* QUEUE FUCTIONS */
 
